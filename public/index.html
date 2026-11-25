@@ -1,0 +1,23 @@
+<input id="msg" placeholder="Ton message" />
+<button id="send">Envoyer</button>
+<ul id="log"></ul>
+
+<script>
+  const ws = new WebSocket("ws://localhost:8080");
+  const log = (t) => {
+    const li = document.createElement("li");
+    li.textContent = t;
+    document.getElementById("log").append(li);
+  };
+
+  ws.addEventListener("open", () => log("✅ connecté"));
+  ws.addEventListener("message", (e) => log(e.data));
+  ws.addEventListener("close", () => log("❌ déconnecté"));
+  ws.addEventListener("error", () => log("⚠️ erreur"));
+
+  document.getElementById("send").onclick = () => {
+    const input = document.getElementById("msg");
+    ws.send(input.value);
+    input.value = "";
+  };
+</script>
